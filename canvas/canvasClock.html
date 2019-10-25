@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width='500px' height="500px" style="border:1px solid #ccc"></canvas>
+</body>
+<script>
+    let canvas = document.getElementById('canvas');
+    let ctx = canvas.getContext('2d');
+    let pi = Math.PI;
+    // 绘制表盘
+    function draw(ctx){
+        requestAnimationFrame(function step(){
+            drawDial(ctx);
+            drawHands(ctx);
+            requestAnimationFrame(step);
+        })
+        // requestAnimationFrame(function step(){
+        //     drawDial(ctx); //绘制表盘
+        //     drawAllHands(ctx); //绘制时分秒针
+        //     requestAnimationFrame(step);
+        // });
+    }
+    function drawDial(ctx){
+        ctx.clearRect(0, 0, 500, 500);
+        ctx.save();
+        ctx.translate(250,250);
+        for(let i=1;i<=60;i++){
+            ctx.save();
+            ctx.rotate(pi/30*i-pi/2);
+            ctx.strokeStyle = i % 5?'#aaa':'#FF5809';
+            ctx.lineWidth = i % 5?'1':'3';
+            ctx.beginPath();
+            ctx.moveTo(0,130);
+            ctx.lineTo(0,150);
+            ctx.stroke();
+            ctx.closePath();
+            ctx.restore();
+        }
+        ctx.restore();
+    }
+    function drawHands(ctx){
+        let time = new Date();
+
+        let hour = time.getHours();
+        let minute = time.getMinutes();
+        let second = time.getSeconds();
+
+        let sAngle = (second*pi/30);
+        let mAngle = ( minute*pi/30 + sAngle/60);
+        let hAngle = (hour*pi/6 + mAngle/12);
+
+        drawHand(sAngle,132,1,'#aaa',ctx);
+        drawHand(minute,110,2,'	#2E8B57',ctx);
+        drawHand(hour,90,4,'#FF5809',ctx);
+    }
+    // 画表针
+    function drawHand(angle, len, width, color, ctx){
+        ctx.save();
+        ctx.translate(250,250);
+        ctx.rotate(-pi/2+angle);
+        ctx.lineWidth = width;
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(0,0);
+        ctx.lineTo(0,len);
+        ctx.stroke();
+        ctx.closePath();
+        ctx.restore();
+    }
+
+    
+    draw(ctx);
+</script>
+</html>
