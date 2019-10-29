@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>百分比进度加载</title>
+</head>
+<body>
+    <canvas id="canvas" width="400px" height="400px" style="background-color: #030303;"></canvas>
+</body>
+<script>
+    let canvas = document.getElementById('canvas');
+    let ctx = canvas.getContext('2d');
+
+    let cirX = canvas.width/2;
+    let cirY = canvas.height/2;//画布中心点坐标
+
+    let rad = Math.PI * 2 /100;  //每次转动的角度
+    let r = 100;//半径
+    let n = 1;//初始数值
+
+    draw();
+
+    function draw(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        writeCircle();
+        writeNum(n);
+        writeBlue(n);
+        if(n < 100){
+            n++;
+            window.requestAnimationFrame(draw);
+        } else {
+            n=0;
+        }
+    };
+    function writeCircle(){
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle =  "#49f";
+        ctx.arc(cirX,cirY,r,0,2*Math.PI);
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function writeNum(n){
+        ctx.save();
+        ctx.strokeStyle =  "#49f";
+        ctx.font = "40px Arial";
+        ctx.strokeText(n+'%',cirX-30,cirY+10    );
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function writeBlue(n){
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle =  "#49f";
+        ctx.lineWidth= 3;
+        ctx.arc(cirX,cirY,r,-Math.PI/2,-Math.PI/2+n*rad);
+        ctx.stroke();
+        ctx.restore();
+    }
+</script>
+</html>
